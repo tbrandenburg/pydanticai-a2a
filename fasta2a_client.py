@@ -2,6 +2,7 @@
 import asyncio
 import httpx
 import json
+import uuid
 from fasta2a.client import A2AClient, Message, UnexpectedResponseError
 from fasta2a.schema import TextPart
 
@@ -17,11 +18,14 @@ async def main():
     try:
         user_message = Message(
             role="user",
-            parts=[TextPart(type="text", text="How much does Tiramisu cost?")]
+            parts=[TextPart(text="How much does Tiramisu cost?", kind="text", metadata={})],
+            kind="message",
+            message_id=str(uuid.uuid4()),
+            metadata={}
         )
 
-        print("▶️  Sending 'send_task' request...")
-        send_response = await client.send_task(message=user_message)
+        print("▶️  Sending 'send_message' request...")
+        send_response = await client.send_message(message=user_message)
         
         print("\n--- DEBUG: INITIAL RESPONSE ---")
         print(json.dumps(send_response, indent=2))
